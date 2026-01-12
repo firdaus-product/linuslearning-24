@@ -1,198 +1,295 @@
 <!DOCTYPE html>
-<html lang="ms-MY">
+<html lang="ms-MY" class="overflow-hidden overscroll-none">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pemulihan: Nombor Hingga 100</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Pemulihan: Nombor Hingga 100</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-  <style>
-    /* --- UI STYLE (MASTER REFERENCE - TEMA HIJAU) --- */
-    body { 
-        font-family: 'Fredoka', sans-serif; 
-        background-color: #f0fdf4; 
-        background-image: radial-gradient(#86efac 2px, transparent 2px); 
-        background-size: 30px 30px; 
-        user-select: none;
-    }
-    
-    .game-card { 
-        background: white; 
-        border: 4px solid #475569; 
-        box-shadow: 8px 8px 0px #00000020; 
-        border-radius: 1.5rem; 
-        min-height: 600px; 
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        overflow: hidden; 
-    }
-    
-    /* Buttons */
-    .btn-3d { 
-        transition: all 0.1s; 
-        border-bottom-width: 6px; 
-        border-color: rgba(0,0,0,0.2); 
-        transform: translateY(0); 
-        cursor: pointer; 
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .btn-3d:active:not(:disabled) { transform: translateY(4px); border-bottom-width: 2px; box-shadow: none; }
-    .btn-3d:disabled { opacity: 0.6; cursor: not-allowed; border-bottom-width: 6px; filter: grayscale(100%); }
+    <style>
+        /* --- UI STYLE (MASTER REFERENCE - TEMA HIJAU) --- */
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background-color: #f0fdf4;
+            background-image: radial-gradient(#86efac 2px, transparent 2px);
+            background-size: 30px 30px;
+            user-select: none;
+        }
 
-    /* Animations & Interactions */
-    .pop-in { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-    @keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
-    
-    .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
-    @keyframes shake { 10%, 90% { transform: translate3d(-2px, 0, 0); } 20%, 80% { transform: translate3d(4px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-6px, 0, 0); } 40%, 60% { transform: translate3d(6px, 0, 0); } }
+        .game-card {
+            background: white;
+            border: 4px solid #475569;
+            box-shadow: 8px 8px 0px #00000020;
+            border-radius: 1.5rem;
+            /* min-height: 600px; REMOVED */
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            overflow: hidden;
+        }
 
-    /* Drag & Drop & Zones */
-    .draggable { cursor: grab; touch-action: none; }
-    .draggable:active { cursor: grabbing; opacity: 0.8; transform: scale(1.05); }
-    .drop-zone { transition: all 0.2s; border: 4px dashed #cbd5e1; background: #f8fafc; border-radius: 1rem; }
-    .drop-zone.drag-over { background: #dbeafe; border-color: #3b82f6; transform: scale(1.02); }
-    
-    /* Custom for Ten-Frame & Blocks */
-    .ten-frame-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; }
-    .dot { width: 1.5rem; height: 1.5rem; border-radius: 50%; transition: background-color 0.2s; border: 2px solid rgba(0,0,0,0.1); }
-    
-    .rod { width: 12px; height: 50px; background-color: #3b82f6; border: 2px solid #1e40af; border-radius: 4px; display: inline-block; margin: 0 2px; }
-  </style>
+        /* Buttons */
+        .btn-3d {
+            transition: all 0.1s;
+            border-bottom-width: 6px;
+            border-color: rgba(0, 0, 0, 0.2);
+            transform: translateY(0);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-3d:active:not(:disabled) {
+            transform: translateY(4px);
+            border-bottom-width: 2px;
+            box-shadow: none;
+        }
+
+        .btn-3d:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            border-bottom-width: 6px;
+            filter: grayscale(100%);
+        }
+
+        /* Animations & Interactions */
+        .pop-in {
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
+        }
+
+        @keyframes shake {
+
+            10%,
+            90% {
+                transform: translate3d(-2px, 0, 0);
+            }
+
+            20%,
+            80% {
+                transform: translate3d(4px, 0, 0);
+            }
+
+            30%,
+            50%,
+            70% {
+                transform: translate3d(-6px, 0, 0);
+            }
+
+            40%,
+            60% {
+                transform: translate3d(6px, 0, 0);
+            }
+        }
+
+        /* Drag & Drop & Zones */
+        .draggable {
+            cursor: grab;
+            touch-action: none;
+        }
+
+        .draggable:active {
+            cursor: grabbing;
+            opacity: 0.8;
+            transform: scale(1.05);
+        }
+
+        .drop-zone {
+            transition: all 0.2s;
+            border: 4px dashed #cbd5e1;
+            background: #f8fafc;
+            border-radius: 1rem;
+        }
+
+        .drop-zone.drag-over {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            transform: scale(1.02);
+        }
+
+        /* Custom for Ten-Frame & Blocks */
+        .ten-frame-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.2rem;
+        }
+
+        .dot {
+            width: 1.2rem;
+            height: 1.2rem;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .rod {
+            width: 10px;
+            height: 40px;
+            background-color: #3b82f6;
+            border: 2px solid #1e40af;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 0 1px;
+        }
+    </style>
 </head>
-<body class="min-h-screen text-slate-800 pb-10">
 
-  <div class="fixed top-4 left-0 right-0 z-50 px-4 pointer-events-none">
-    <div class="max-w-4xl mx-auto bg-green-400 border-4 border-green-600 rounded-full px-6 py-3 shadow-xl flex items-center justify-between pointer-events-auto transform hover:scale-[1.01] transition-transform">
-      <div class="flex items-center gap-3">
-        <span class="text-3xl animate-bounce">🔢</span>
-        <span id="info-text" class="text-xl font-bold text-green-900 leading-none mt-1">Nombor Hingga 100</span>
-      </div>
-      <button id="speak-btn" onclick="speakInfo()" class="bg-white hover:bg-green-50 text-green-600 border-2 border-green-200 rounded-full p-2 transition-colors shadow-sm">🔊</button>
+<body class="h-screen w-screen overflow-hidden text-slate-800 flex flex-col overscroll-none">
+
+    <div class="flex-none p-4 z-50 pointer-events-none w-full">
+        <div
+            class="max-w-4xl mx-auto bg-green-400 border-4 border-green-600 rounded-full px-4 py-2 shadow-xl flex items-center justify-between pointer-events-auto transform hover:scale-[1.01] transition-transform">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl animate-bounce">🔢</span>
+                <span id="info-text" class="text-lg font-bold text-green-900 leading-none mt-1">Nombor Hingga 100</span>
+            </div>
+            <button id="speak-btn" onclick="speakInfo()"
+                class="bg-white hover:bg-green-50 text-green-600 border-2 border-green-200 rounded-full p-2 transition-colors shadow-sm">🔊</button>
+        </div>
     </div>
-  </div>
-  <div class="h-24"></div>
 
-  <div class="max-w-6xl mx-auto p-4">
-    
-    <div class="game-card p-8 mb-8">
-        <div id="activity-content" class="w-full relative z-10 flex flex-col items-center justify-center h-full transition-opacity duration-200 min-h-[500px]">
-            <div class="py-10 text-center">
-                <div class="text-8xl mb-6 animate-pulse">🎯</div>
-                <h2 class="text-5xl font-bold text-emerald-600 mb-4">Nombor Hingga 100</h2>
-                <p class="text-2xl text-slate-500 mb-8 font-semibold">Pilih aktiviti di bawah untuk mula.</p>
-                <div class="text-4xl animate-bounce">👇</div>
+    <div class="flex-1 w-full max-w-6xl mx-auto p-2 flex flex-col min-h-0">
+
+        <div class="game-card p-4 mb-2 flex-1 w-full">
+            <div id="activity-content"
+                class="w-full relative z-10 flex flex-col items-center justify-center h-full transition-opacity duration-200">
+                <div class="py-10 text-center">
+                    <div class="text-8xl mb-6 animate-pulse">🎯</div>
+                    <h2 class="text-5xl font-bold text-emerald-600 mb-4">Nombor Hingga 100</h2>
+                    <p class="text-lg text-slate-500 mb-8 font-semibold">Pilih aktiviti di bawah untuk mula.</p>
+                    <div class="text-4xl animate-bounce">👇</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-none bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg p-2 border-2 border-white">
+            <h3 class="text-lg font-bold text-slate-700 mb-1 text-center">🎮 Pilih Aktiviti</h3>
+
+            <div class="grid grid-cols-5 gap-2 mb-2">
+                <button onclick="loadActivity(1)"
+                    class="btn-3d bg-blue-500 text-white font-bold py-2 px-1 rounded-xl text-xs md:text-sm">🔗<br>Padanan</button>
+                <button onclick="loadActivity(2)"
+                    class="btn-3d bg-green-500 text-white font-bold py-2 px-1 rounded-xl text-xs md:text-sm">🧱<br>Blok</button>
+                <button onclick="loadActivity(3)"
+                    class="btn-3d bg-purple-500 text-white font-bold py-2 px-1 rounded-xl text-xs md:text-sm">🧮<br>Cerakin</button>
+                <button onclick="loadActivity(4)"
+                    class="btn-3d bg-orange-500 text-white font-bold py-2 px-1 rounded-xl text-xs md:text-sm">📏<br>Susun</button>
+                <button onclick="loadActivity(5)"
+                    class="btn-3d bg-pink-500 text-white font-bold py-2 px-1 rounded-xl text-xs md:text-sm">👆<br>Kenal</button>
+            </div>
+
+            <div class="flex justify-center gap-4 border-t-2 border-slate-100 pt-2">
+                <button onclick="clearActivity()"
+                    class="btn-3d bg-slate-400 text-white font-bold py-1 px-4 rounded-full text-base">🏠 Menu</button>
+                <button onclick="nextActivity()"
+                    class="btn-3d bg-indigo-500 text-white font-bold py-1 px-6 rounded-full text-lg">Seterusnya
+                    ➡️</button>
             </div>
         </div>
     </div>
 
-    <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg p-6 border-2 border-white">
-      <h3 class="text-2xl font-bold text-slate-700 mb-4 text-center">🎮 Pilih Aktiviti</h3>
-      
-      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
-        <button onclick="loadActivity(1)" class="btn-3d bg-blue-500 text-white font-bold py-4 px-2 rounded-xl text-lg">🔗 Padanan</button>
-        <button onclick="loadActivity(2)" class="btn-3d bg-green-500 text-white font-bold py-4 px-2 rounded-xl text-lg">🧱 Bina Blok</button>
-        <button onclick="loadActivity(3)" class="btn-3d bg-purple-500 text-white font-bold py-4 px-2 rounded-xl text-lg">🧮 Cerakin</button>
-        <button onclick="loadActivity(4)" class="btn-3d bg-orange-500 text-white font-bold py-4 px-2 rounded-xl text-lg">📏 Susun</button>
-        <button onclick="loadActivity(5)" class="btn-3d bg-pink-500 text-white font-bold py-4 px-2 rounded-xl text-lg">👆 Kenal Digit</button>
-      </div>
+    <script>
+        /* --- STANDARD HELPERS (FROM MASTER REF) --- */
+        let currentActivity = 0;
+        let ttsEnabled = false;
+        let currentInfo = "Pilih aktiviti untuk mula belajar!";
 
-      <div class="flex justify-center gap-4 border-t-2 border-slate-100 pt-6">
-        <button onclick="clearActivity()" class="btn-3d bg-slate-400 text-white font-bold py-2 px-6 rounded-full text-lg">🏠 Menu</button>
-        <button onclick="nextActivity()" class="btn-3d bg-indigo-500 text-white font-bold py-2 px-8 rounded-full text-xl">Seterusnya ➡️</button>
-      </div>
-    </div>
-  </div>
+        function speak(text) {
+            if (!ttsEnabled || !('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(text); u.lang = 'ms-MY'; u.rate = 0.95; u.pitch = 1.05;
+            const ms = window.speechSynthesis.getVoices().find(v => v.lang === 'ms-MY' || v.lang?.startsWith('ms'));
+            if (ms) u.voice = ms;
+            window.speechSynthesis.speak(u);
+        }
 
-  <script>
-    /* --- STANDARD HELPERS (FROM MASTER REF) --- */
-    let currentActivity = 0;
-    let ttsEnabled = false;
-    let currentInfo = "Pilih aktiviti untuk mula belajar!";
-    
-    function speak(text) { 
-        if (!ttsEnabled || !('speechSynthesis' in window)) return; 
-        window.speechSynthesis.cancel(); 
-        const u = new SpeechSynthesisUtterance(text); u.lang = 'ms-MY'; u.rate = 0.95; u.pitch = 1.05; 
-        const ms = window.speechSynthesis.getVoices().find(v => v.lang === 'ms-MY' || v.lang?.startsWith('ms')); 
-        if (ms) u.voice = ms; 
-        window.speechSynthesis.speak(u); 
-    }
-    
-    function setInfo(text) { 
-        currentInfo = text; const infoEl = document.getElementById('info-text'); 
-        infoEl.style.opacity = 0; setTimeout(() => { infoEl.textContent = text; infoEl.style.opacity = 1; }, 200); 
-    }
-    
-    function speakInfo() { 
-        if (!ttsEnabled) { ttsEnabled = true; document.getElementById('speak-btn').classList.add('bg-green-100', 'text-green-600'); } 
-        speak(currentInfo); 
-    }
+        function setInfo(text) {
+            currentInfo = text; const infoEl = document.getElementById('info-text');
+            infoEl.style.opacity = 0; setTimeout(() => { infoEl.textContent = text; infoEl.style.opacity = 1; }, 200);
+        }
 
-    function triggerWin() { confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); }
+        function speakInfo() {
+            if (!ttsEnabled) { ttsEnabled = true; document.getElementById('speak-btn').classList.add('bg-green-100', 'text-green-600'); }
+            speak(currentInfo);
+        }
 
-    /* --- ROUTER --- */
-    function loadActivity(n) {
-      currentActivity = n;
-      const content = document.getElementById('activity-content');
-      content.style.opacity = 0;
-      setTimeout(() => {
-          if (n === 1) setupAct1(content);
-          else if (n === 2) setupAct2(content);
-          else if (n === 3) setupAct3(content);
-          else if (n === 4) setupAct4(content);
-          else if (n === 5) setupAct5(content);
-          content.style.opacity = 1; 
-      }, 200);
-    }
+        function triggerWin() { confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); }
 
-    function clearActivity() {
-        currentActivity = 0;
-        document.getElementById('activity-content').innerHTML = `<div class="py-10 text-center"><div class="text-8xl mb-6 animate-pulse">🎯</div><h2 class="text-5xl font-bold text-emerald-600 mb-4">Nombor Hingga 100</h2><p class="text-2xl text-slate-500 mb-8 font-semibold">Pilih butang di bawah.</p></div>`;
-        setInfo("Pilih aktiviti di bawah.");
-    }
-    function nextActivity() { let next = currentActivity + 1; if (next > 5) next = 1; loadActivity(next); }
+        /* --- ROUTER --- */
+        function loadActivity(n) {
+            currentActivity = n;
+            const content = document.getElementById('activity-content');
+            content.style.opacity = 0;
+            setTimeout(() => {
+                if (n === 1) setupAct1(content);
+                else if (n === 2) setupAct2(content);
+                else if (n === 3) setupAct3(content);
+                else if (n === 4) setupAct4(content);
+                else if (n === 5) setupAct5(content);
+                content.style.opacity = 1;
+            }, 200);
+        }
+
+        function clearActivity() {
+            currentActivity = 0;
+            document.getElementById('activity-content').innerHTML = `<div class="py-10 text-center"><div class="text-8xl mb-6 animate-pulse">🎯</div><h2 class="text-5xl font-bold text-emerald-600 mb-4">Nombor Hingga 100</h2><p class="text-2xl text-slate-500 mb-8 font-semibold">Pilih butang di bawah.</p></div>`;
+            setInfo("Pilih aktiviti di bawah.");
+        }
+        function nextActivity() { let next = currentActivity + 1; if (next > 5) next = 1; loadActivity(next); }
 
 
-    /* =========================================
-       LOGIK AKTIVITI (MIGRATED FROM SOURCE)
-       ========================================= */
+        /* =========================================
+           LOGIK AKTIVITI (MIGRATED FROM SOURCE)
+           ========================================= */
 
-    /* --- 1. Padanan Angka & Perkataan --- */
-    let matchState = { selectedNum: null, selectedWord: null };
-    
-    function setupAct1(content) {
-        setInfo("Padankan Angka (Biru) dengan Perkataan (Hijau).");
-        matchState = { selectedNum: null, selectedWord: null };
-        
-        const pairs = [
-            {d:"25", w:"dua puluh lima"}, {d:"41", w:"empat puluh satu"}, 
-            {d:"17", w:"tujuh belas"}, {d:"100", w:"seratus"}, {d:"8", w:"lapan"}
-        ];
-        // Shuffle
-        const nums = [...pairs].sort(()=>Math.random()-0.5);
-        const words = [...pairs].sort(()=>Math.random()-0.5);
+        /* --- 1. Padanan Angka & Perkataan --- */
+        let matchState = { selectedNum: null, selectedWord: null };
 
-        content.innerHTML = `
-            <div class="w-full max-w-4xl text-center">
-                <h3 class="text-3xl font-bold text-blue-600 mb-6">🔗 Padanan Angka & Perkataan</h3>
-                <div class="grid grid-cols-2 gap-8">
-                    <div class="flex flex-col gap-4">
+        function setupAct1(content) {
+            setInfo("Padankan Angka (Biru) dengan Perkataan (Hijau).");
+            matchState = { selectedNum: null, selectedWord: null };
+
+            const pairs = [
+                { d: "25", w: "dua puluh lima" }, { d: "41", w: "empat puluh satu" },
+                { d: "17", w: "tujuh belas" }, { d: "100", w: "seratus" }, { d: "8", w: "lapan" }
+            ];
+            // Shuffle
+            const nums = [...pairs].sort(() => Math.random() - 0.5);
+            const words = [...pairs].sort(() => Math.random() - 0.5);
+
+            content.innerHTML = `
+            <div class="w-full max-w-4xl text-center flex flex-col h-full overflow-y-auto">
+                <h3 class="text-2xl font-bold text-blue-600 mb-4 flex-none">🔗 Padanan Angka & Perkataan</h3>
+                <div class="grid grid-cols-2 gap-4 flex-1 min-h-0">
+                    <div class="flex flex-col gap-2">
                         ${nums.map(item => `
-                            <button onclick="selNum('${item.d}', this)" class="num-card btn-3d bg-blue-100 text-blue-900 p-4 rounded-xl border-blue-300 text-3xl font-bold w-full hover:bg-blue-200">
+                            <button onclick="selNum('${item.d}', this)" class="num-card btn-3d bg-blue-100 text-blue-900 p-2 rounded-xl border-blue-300 text-2xl font-bold w-full hover:bg-blue-200 h-16">
                                 ${item.d}
                             </button>
                         `).join('')}
                     </div>
-                    <div class="flex flex-col gap-4">
+                    <div class="flex flex-col gap-2">
                         ${words.map(item => `
-                            <button onclick="selWord('${item.d}', this)" class="word-card btn-3d bg-green-100 text-green-900 p-4 rounded-xl border-green-300 text-xl font-bold w-full hover:bg-green-200">
+                            <button onclick="selWord('${item.d}', this)" class="word-card btn-3d bg-green-100 text-green-900 p-2 rounded-xl border-green-300 text-base font-bold w-full hover:bg-green-200 h-16 leading-tight">
                                 ${item.w}
                             </button>
                         `).join('')}
@@ -200,259 +297,259 @@
                 </div>
             </div>
         `;
-    }
-
-    window.selNum = function(val, btn) {
-        if(btn.disabled) return;
-        document.querySelectorAll('.num-card').forEach(b => b.classList.remove('bg-blue-400', 'text-white'));
-        btn.classList.add('bg-blue-400', 'text-white');
-        matchState.selectedNum = { val, btn };
-        speak(val);
-        checkMatch();
-    }
-
-    window.selWord = function(matchVal, btn) {
-        if(btn.disabled) return;
-        document.querySelectorAll('.word-card').forEach(b => b.classList.remove('bg-green-400', 'text-white'));
-        btn.classList.add('bg-green-400', 'text-white');
-        matchState.selectedWord = { matchVal, btn, text: btn.innerText };
-        speak(btn.innerText);
-        checkMatch();
-    }
-
-    function checkMatch() {
-        if(matchState.selectedNum && matchState.selectedWord) {
-            const n = matchState.selectedNum;
-            const w = matchState.selectedWord;
-            
-            if(n.val === w.matchVal) {
-                speak("Betul!");
-                triggerWin();
-                n.btn.classList.replace('bg-blue-400', 'bg-slate-300');
-                w.btn.classList.replace('bg-green-400', 'bg-slate-300');
-                n.btn.disabled = true; w.btn.disabled = true;
-                n.btn.classList.add('pop-in'); w.btn.classList.add('pop-in');
-                setInfo(`Tepat! ${n.val} ialah ${w.text}.`);
-            } else {
-                speak("Salah.");
-                n.btn.classList.add('shake'); w.btn.classList.add('shake');
-                setTimeout(() => {
-                    n.btn.classList.remove('shake', 'bg-blue-400', 'text-white');
-                    w.btn.classList.remove('shake', 'bg-green-400', 'text-white');
-                }, 500);
-                setInfo("Cuba lagi.");
-            }
-            matchState.selectedNum = null;
-            matchState.selectedWord = null;
         }
-    }
+
+        window.selNum = function (val, btn) {
+            if (btn.disabled) return;
+            document.querySelectorAll('.num-card').forEach(b => b.classList.remove('bg-blue-400', 'text-white'));
+            btn.classList.add('bg-blue-400', 'text-white');
+            matchState.selectedNum = { val, btn };
+            speak(val);
+            checkMatch();
+        }
+
+        window.selWord = function (matchVal, btn) {
+            if (btn.disabled) return;
+            document.querySelectorAll('.word-card').forEach(b => b.classList.remove('bg-green-400', 'text-white'));
+            btn.classList.add('bg-green-400', 'text-white');
+            matchState.selectedWord = { matchVal, btn, text: btn.innerText };
+            speak(btn.innerText);
+            checkMatch();
+        }
+
+        function checkMatch() {
+            if (matchState.selectedNum && matchState.selectedWord) {
+                const n = matchState.selectedNum;
+                const w = matchState.selectedWord;
+
+                if (n.val === w.matchVal) {
+                    speak("Betul!");
+                    triggerWin();
+                    n.btn.classList.replace('bg-blue-400', 'bg-slate-300');
+                    w.btn.classList.replace('bg-green-400', 'bg-slate-300');
+                    n.btn.disabled = true; w.btn.disabled = true;
+                    n.btn.classList.add('pop-in'); w.btn.classList.add('pop-in');
+                    setInfo(`Tepat! ${n.val} ialah ${w.text}.`);
+                } else {
+                    speak("Salah.");
+                    n.btn.classList.add('shake'); w.btn.classList.add('shake');
+                    setTimeout(() => {
+                        n.btn.classList.remove('shake', 'bg-blue-400', 'text-white');
+                        w.btn.classList.remove('shake', 'bg-green-400', 'text-white');
+                    }, 500);
+                    setInfo("Cuba lagi.");
+                }
+                matchState.selectedNum = null;
+                matchState.selectedWord = null;
+            }
+        }
 
 
-    /* --- 2. Bina Blok (Drag & Drop) --- */
-    let blockState = { target: 35, p: 0, s: 0 };
-    
-    function setupAct2(content) {
-        setInfo("Masukkan blok Puluh (Biru) dan Sa (Hijau) ke dalam kotak.");
-        blockState = { target: 35, p: 0, s: 0 }; // Fixed target for demo
-        
-        content.innerHTML = `
-            <div class="w-full max-w-5xl text-center">
-                <h3 class="text-3xl font-bold text-green-600 mb-2">🧱 Bina Nombor: <span class="text-4xl text-slate-800">${blockState.target}</span></h3>
-                <div class="flex justify-center gap-4 mb-4 text-xl font-bold text-slate-600 bg-slate-100 p-2 rounded-lg inline-flex">
+        /* --- 2. Bina Blok (Drag & Drop) --- */
+        let blockState = { target: 35, p: 0, s: 0 };
+
+        function setupAct2(content) {
+            setInfo("Masukkan blok Puluh (Biru) dan Sa (Hijau) ke dalam kotak.");
+            blockState = { target: 35, p: 0, s: 0 }; // Fixed target for demo
+
+            content.innerHTML = `
+            <div class="w-full max-w-5xl text-center flex flex-col h-full overflow-hidden">
+                <h3 class="text-2xl font-bold text-green-600 mb-2 flex-none">🧱 Bina Nombor: <span class="text-3xl text-slate-800">${blockState.target}</span></h3>
+                <div class="flex justify-center gap-4 mb-2 text-sm font-bold text-slate-600 bg-slate-100 p-1 rounded-lg inline-flex flex-none">
                     <span id="count-p">Puluh: 0</span> | <span id="count-s">Sa: 0</span> | <span id="count-total">Jumlah: 0</span>
                 </div>
 
-                <div class="grid grid-cols-2 gap-6 mb-6">
-                    <div class="drop-zone min-h-[200px] p-4 flex flex-wrap content-start gap-2" ondrop="dropBlock(event, 'puluh')" ondragover="allowDrop(event)">
-                        <div class="w-full text-center font-bold text-blue-600 mb-2">KOTAK PULUH (10)</div>
+                <div class="grid grid-cols-2 gap-2 mb-2 flex-1 min-h-0">
+                    <div class="drop-zone p-2 flex flex-wrap content-start gap-1 overflow-y-auto" ondrop="dropBlock(event, 'puluh')" ondragover="allowDrop(event)">
+                        <div class="w-full text-center font-bold text-blue-600 mb-1 text-sm">KOTAK PULUH (10)</div>
                         <div id="bin-puluh" class="flex flex-wrap gap-1 justify-center w-full"></div>
                     </div>
-                    <div class="drop-zone min-h-[200px] p-4 flex flex-wrap content-start gap-2" ondrop="dropBlock(event, 'sa')" ondragover="allowDrop(event)">
-                        <div class="w-full text-center font-bold text-green-600 mb-2">KOTAK SA (1)</div>
+                    <div class="drop-zone p-2 flex flex-wrap content-start gap-1 overflow-y-auto" ondrop="dropBlock(event, 'sa')" ondragover="allowDrop(event)">
+                        <div class="w-full text-center font-bold text-green-600 mb-1 text-sm">KOTAK SA (1)</div>
                         <div id="bin-sa" class="flex flex-wrap gap-1 justify-center w-full"></div>
                     </div>
                 </div>
 
-                <div class="bg-slate-200 p-6 rounded-2xl border-2 border-slate-300">
-                    <p class="font-bold text-slate-500 mb-4">Tarik blok dari sini:</p>
+                <div class="bg-slate-200 p-2 rounded-2xl border-2 border-slate-300 flex-none">
+                    <p class="font-bold text-slate-500 mb-2 text-sm">Tarik blok dari sini:</p>
                     <div class="flex justify-center gap-8">
-                        <div draggable="true" ondragstart="dragStartBlock(event, 'puluh')" class="draggable btn-3d bg-blue-500 text-white w-16 h-32 rounded-lg flex items-center justify-center text-2xl font-bold border-blue-700">10</div>
-                        <div draggable="true" ondragstart="dragStartBlock(event, 'sa')" class="draggable btn-3d bg-green-500 text-white w-16 h-16 rounded-lg flex items-center justify-center text-2xl font-bold border-green-700">1</div>
+                        <div draggable="true" ondragstart="dragStartBlock(event, 'puluh')" class="draggable btn-3d bg-blue-500 text-white w-12 h-20 rounded-lg flex items-center justify-center text-xl font-bold border-blue-700">10</div>
+                        <div draggable="true" ondragstart="dragStartBlock(event, 'sa')" class="draggable btn-3d bg-green-500 text-white w-12 h-12 rounded-lg flex items-center justify-center text-xl font-bold border-green-700">1</div>
                     </div>
                 </div>
                 
-                <button onclick="resetBlocks()" class="mt-6 btn-3d bg-red-400 text-white px-6 py-2 rounded-lg font-bold">Reset</button>
+                <button onclick="resetBlocks()" class="mt-2 btn-3d bg-red-400 text-white px-6 py-2 rounded-lg font-bold text-sm flex-none">Reset</button>
             </div>
         `;
-    }
-
-    window.dragStartBlock = function(e, type) { e.dataTransfer.setData('type', type); }
-    window.allowDrop = function(e) { e.preventDefault(); }
-    
-    window.dropBlock = function(e, zoneType) {
-        e.preventDefault();
-        const type = e.dataTransfer.getData('type');
-        
-        if(type !== zoneType) {
-            speak("Salah kotak.");
-            setInfo(`Blok ${type} tak boleh masuk kotak ${zoneType}!`);
-            return;
         }
 
-        // Add visual element
-        const el = document.createElement('div');
-        if(type === 'puluh') {
-            el.className = "w-8 h-20 bg-blue-500 border-2 border-blue-700 rounded pop-in";
-            document.getElementById('bin-puluh').appendChild(el);
-            blockState.p++;
-        } else {
-            el.className = "w-8 h-8 bg-green-500 border-2 border-green-700 rounded pop-in";
-            document.getElementById('bin-sa').appendChild(el);
-            blockState.s++;
+        window.dragStartBlock = function (e, type) { e.dataTransfer.setData('type', type); }
+        window.allowDrop = function (e) { e.preventDefault(); }
+
+        window.dropBlock = function (e, zoneType) {
+            e.preventDefault();
+            const type = e.dataTransfer.getData('type');
+
+            if (type !== zoneType) {
+                speak("Salah kotak.");
+                setInfo(`Blok ${type} tak boleh masuk kotak ${zoneType}!`);
+                return;
+            }
+
+            // Add visual element
+            const el = document.createElement('div');
+            if (type === 'puluh') {
+                el.className = "w-8 h-20 bg-blue-500 border-2 border-blue-700 rounded pop-in";
+                document.getElementById('bin-puluh').appendChild(el);
+                blockState.p++;
+            } else {
+                el.className = "w-8 h-8 bg-green-500 border-2 border-green-700 rounded pop-in";
+                document.getElementById('bin-sa').appendChild(el);
+                blockState.s++;
+            }
+
+            updateBlockStats();
         }
-        
-        updateBlockStats();
-    }
 
-    function updateBlockStats() {
-        const total = (blockState.p * 10) + blockState.s;
-        document.getElementById('count-p').innerText = `Puluh: ${blockState.p}`;
-        document.getElementById('count-s').innerText = `Sa: ${blockState.s}`;
-        document.getElementById('count-total').innerText = `Jumlah: ${total}`;
-        speak(total.toString());
+        function updateBlockStats() {
+            const total = (blockState.p * 10) + blockState.s;
+            document.getElementById('count-p').innerText = `Puluh: ${blockState.p}`;
+            document.getElementById('count-s').innerText = `Sa: ${blockState.s}`;
+            document.getElementById('count-total').innerText = `Jumlah: ${total}`;
+            speak(total.toString());
 
-        if(total === blockState.target) {
-            speak("Tahniah! Jawapan betul.");
-            triggerWin();
-            setInfo(`Hebat! Anda membina nombor ${blockState.target}.`);
-        } else if(total > blockState.target) {
-            setInfo("Dah lebih! Tekan Reset.");
+            if (total === blockState.target) {
+                speak("Tahniah! Jawapan betul.");
+                triggerWin();
+                setInfo(`Hebat! Anda membina nombor ${blockState.target}.`);
+            } else if (total > blockState.target) {
+                setInfo("Dah lebih! Tekan Reset.");
+            }
         }
-    }
-    window.resetBlocks = function() { loadActivity(2); }
+        window.resetBlocks = function () { loadActivity(2); }
 
 
-    /* --- 3. Cerakin (Interactive Rods/Frames) --- */
-    let cerakinState = { target: 0, p:0, s:0 };
+        /* --- 3. Cerakin (Interactive Rods/Frames) --- */
+        let cerakinState = { target: 0, p: 0, s: 0 };
 
-    function setupAct3(content) {
-        const num = Math.floor(Math.random() * 89) + 11;
-        cerakinState = { target: num, p: Math.floor(num/10), s: num%10, curP:0, curS:0 };
-        
-        setInfo(`Cerakinkan nombor ${num}.`);
+        function setupAct3(content) {
+            const num = Math.floor(Math.random() * 89) + 11;
+            cerakinState = { target: num, p: Math.floor(num / 10), s: num % 10, curP: 0, curS: 0 };
 
-        content.innerHTML = `
-            <div class="w-full max-w-4xl text-center">
-                <h3 class="text-3xl font-bold text-purple-600 mb-2">🧮 Cerakin Nombor</h3>
-                <div class="text-6xl font-black text-slate-700 mb-6 bg-white inline-block px-8 py-2 rounded-2xl border-4 border-slate-200 shadow-sm">${num}</div>
+            setInfo(`Cerakinkan nombor ${num}.`);
 
-                <div class="flex flex-col md:flex-row gap-6 justify-center mb-8">
-                    <div class="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 w-full md:w-1/2 min-h-[120px] flex flex-col items-center justify-center">
-                        <span class="text-sm font-bold text-blue-400 mb-2">ROD PULUH</span>
-                        <div id="vis-puluh" class="flex items-end gap-1 h-16"></div>
+            content.innerHTML = `
+            <div class="w-full max-w-4xl text-center flex flex-col h-full justify-center">
+                <h3 class="text-2xl font-bold text-purple-600 mb-2">🧮 Cerakin Nombor</h3>
+                <div class="text-5xl font-black text-slate-700 mb-4 bg-white inline-block px-6 py-1 rounded-2xl border-4 border-slate-200 shadow-sm">${num}</div>
+
+                <div class="flex flex-col md:flex-row gap-4 justify-center mb-4 flex-1 min-h-0">
+                    <div class="bg-blue-50 border-2 border-blue-200 rounded-xl p-2 w-full md:w-1/2 flex flex-col items-center justify-center overflow-auto">
+                        <span class="text-xs font-bold text-blue-400 mb-1">ROD PULUH</span>
+                        <div id="vis-puluh" class="flex items-end gap-1 h-12"></div>
                     </div>
-                    <div class="bg-green-50 border-2 border-green-200 rounded-xl p-4 w-full md:w-1/2 min-h-[120px] flex flex-col items-center justify-center">
-                        <span class="text-sm font-bold text-green-400 mb-2">DOT SA</span>
+                    <div class="bg-green-50 border-2 border-green-200 rounded-xl p-2 w-full md:w-1/2 flex flex-col items-center justify-center overflow-auto">
+                        <span class="text-xs font-bold text-green-400 mb-1">DOT SA</span>
                         <div id="vis-sa" class="ten-frame-grid"></div>
                     </div>
                 </div>
 
-                <div class="flex justify-center gap-8 items-center">
+                <div class="flex justify-center gap-6 items-center flex-none">
                     <div class="flex flex-col items-center">
-                        <span class="font-bold text-blue-600">Puluh</span>
-                        <div class="flex items-center gap-2 mt-2">
-                            <button onclick="modCerakin('p', -1)" class="btn-3d w-12 h-12 bg-red-500 text-white rounded-full text-2xl font-bold">-</button>
-                            <span id="val-p" class="text-4xl font-bold w-16">0</span>
-                            <button onclick="modCerakin('p', 1)" class="btn-3d w-12 h-12 bg-green-500 text-white rounded-full text-2xl font-bold">+</button>
+                        <span class="font-bold text-blue-600 text-sm">Puluh</span>
+                        <div class="flex items-center gap-2 mt-1">
+                            <button onclick="modCerakin('p', -1)" class="btn-3d w-10 h-10 bg-red-500 text-white rounded-full text-xl font-bold">-</button>
+                            <span id="val-p" class="text-3xl font-bold w-12">0</span>
+                            <button onclick="modCerakin('p', 1)" class="btn-3d w-10 h-10 bg-green-500 text-white rounded-full text-xl font-bold">+</button>
                         </div>
                     </div>
-                    <div class="text-4xl text-slate-300 font-bold">+</div>
+                    <div class="text-3xl text-slate-300 font-bold">+</div>
                     <div class="flex flex-col items-center">
-                        <span class="font-bold text-green-600">Sa</span>
-                        <div class="flex items-center gap-2 mt-2">
-                            <button onclick="modCerakin('s', -1)" class="btn-3d w-12 h-12 bg-red-500 text-white rounded-full text-2xl font-bold">-</button>
-                            <span id="val-s" class="text-4xl font-bold w-16">0</span>
-                            <button onclick="modCerakin('s', 1)" class="btn-3d w-12 h-12 bg-green-500 text-white rounded-full text-2xl font-bold">+</button>
+                        <span class="font-bold text-green-600 text-sm">Sa</span>
+                        <div class="flex items-center gap-2 mt-1">
+                            <button onclick="modCerakin('s', -1)" class="btn-3d w-10 h-10 bg-red-500 text-white rounded-full text-xl font-bold">-</button>
+                            <span id="val-s" class="text-3xl font-bold w-12">0</span>
+                            <button onclick="modCerakin('s', 1)" class="btn-3d w-10 h-10 bg-green-500 text-white rounded-full text-xl font-bold">+</button>
                         </div>
                     </div>
                 </div>
                 
-                <button onclick="checkCerakin()" class="mt-8 btn-3d bg-purple-600 text-white px-8 py-3 rounded-xl text-xl font-bold">Semak Jawapan</button>
+                <button onclick="checkCerakin()" class="mt-4 btn-3d bg-purple-600 text-white px-6 py-2 rounded-xl text-lg font-bold flex-none">Semak Jawapan</button>
             </div>
         `;
-        renderCerakinVis();
-    }
-
-    window.modCerakin = function(type, val) {
-        if(type === 'p') {
-            cerakinState.curP += val;
-            if(cerakinState.curP < 0) cerakinState.curP = 0;
-            if(cerakinState.curP > 9) cerakinState.curP = 9;
-            speak(cerakinState.curP * 10);
-        } else {
-            cerakinState.curS += val;
-            if(cerakinState.curS < 0) cerakinState.curS = 0;
-            if(cerakinState.curS > 9) cerakinState.curS = 9;
-            speak(cerakinState.curS);
+            renderCerakinVis();
         }
-        renderCerakinVis();
-    }
 
-    function renderCerakinVis() {
-        document.getElementById('val-p').innerText = cerakinState.curP;
-        document.getElementById('val-s').innerText = cerakinState.curS;
-        
-        // Render Rods
-        const rodHTML = Array(cerakinState.curP).fill('<div class="rod"></div>').join('');
-        document.getElementById('vis-puluh').innerHTML = rodHTML;
-
-        // Render Dots
-        let dotsHTML = '';
-        for(let i=0; i<10; i++) {
-            dotsHTML += `<div class="dot ${i < cerakinState.curS ? 'bg-green-500 border-green-600' : 'bg-slate-200'}"></div>`;
+        window.modCerakin = function (type, val) {
+            if (type === 'p') {
+                cerakinState.curP += val;
+                if (cerakinState.curP < 0) cerakinState.curP = 0;
+                if (cerakinState.curP > 9) cerakinState.curP = 9;
+                speak(cerakinState.curP * 10);
+            } else {
+                cerakinState.curS += val;
+                if (cerakinState.curS < 0) cerakinState.curS = 0;
+                if (cerakinState.curS > 9) cerakinState.curS = 9;
+                speak(cerakinState.curS);
+            }
+            renderCerakinVis();
         }
-        document.getElementById('vis-sa').innerHTML = dotsHTML;
-    }
 
-    window.checkCerakin = function() {
-        if(cerakinState.curP === cerakinState.p && cerakinState.curS === cerakinState.s) {
-            speak("Tahniah! Jawapan betul.");
-            triggerWin();
-            setInfo(`Betul! ${cerakinState.target} ialah ${cerakinState.p} puluh dan ${cerakinState.s} sa.`);
-        } else {
-            speak("Belum tepat.");
-            setInfo("Cuba lagi. Semak nilai puluh dan sa.");
+        function renderCerakinVis() {
+            document.getElementById('val-p').innerText = cerakinState.curP;
+            document.getElementById('val-s').innerText = cerakinState.curS;
+
+            // Render Rods
+            const rodHTML = Array(cerakinState.curP).fill('<div class="rod"></div>').join('');
+            document.getElementById('vis-puluh').innerHTML = rodHTML;
+
+            // Render Dots
+            let dotsHTML = '';
+            for (let i = 0; i < 10; i++) {
+                dotsHTML += `<div class="dot ${i < cerakinState.curS ? 'bg-green-500 border-green-600' : 'bg-slate-200'}"></div>`;
+            }
+            document.getElementById('vis-sa').innerHTML = dotsHTML;
         }
-    }
+
+        window.checkCerakin = function () {
+            if (cerakinState.curP === cerakinState.p && cerakinState.curS === cerakinState.s) {
+                speak("Tahniah! Jawapan betul.");
+                triggerWin();
+                setInfo(`Betul! ${cerakinState.target} ialah ${cerakinState.p} puluh dan ${cerakinState.s} sa.`);
+            } else {
+                speak("Belum tepat.");
+                setInfo("Cuba lagi. Semak nilai puluh dan sa.");
+            }
+        }
 
 
-    /* --- 4. Susun Nombor --- */
-    function setupAct4(content) {
-        setInfo("Susun nombor mengikut urutan menaik.");
-        const start = 45; 
-        const numbers = [45, 46, 47, 48, 49];
-        const fixed = [45, 48];
-        
-        content.innerHTML = `
-            <div class="w-full max-w-5xl text-center">
-                <h3 class="text-3xl font-bold text-orange-600 mb-6">📏 Susun Nombor</h3>
+        /* --- 4. Susun Nombor --- */
+        function setupAct4(content) {
+            setInfo("Susun nombor mengikut urutan menaik.");
+            const start = 45;
+            const numbers = [45, 46, 47, 48, 49];
+            const fixed = [45, 48];
+
+            content.innerHTML = `
+            <div class="w-full max-w-5xl text-center flex flex-col h-full overflow-hidden">
+                <h3 class="text-2xl font-bold text-orange-600 mb-4 flex-none">📏 Susun Nombor</h3>
                 
-                <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-10">
+                <div class="flex flex-wrap justify-center gap-2 mb-8 flex-1 content-center">
                     ${numbers.map(n => {
-                        if(fixed.includes(n)) {
-                            return `<div class="w-16 h-20 md:w-24 md:h-32 bg-slate-200 rounded-xl flex items-center justify-center text-3xl md:text-4xl font-bold text-slate-400 border-4 border-slate-300">${n}</div>`;
-                        } else {
-                            return `<div class="drop-zone w-16 h-20 md:w-24 md:h-32 rounded-xl flex items-center justify-center text-3xl font-bold" 
+                if (fixed.includes(n)) {
+                    return `<div class="w-14 h-18 md:w-20 md:h-24 bg-slate-200 rounded-xl flex items-center justify-center text-2xl md:text-3xl font-bold text-slate-400 border-4 border-slate-300">${n}</div>`;
+                } else {
+                    return `<div class="drop-zone w-14 h-18 md:w-20 md:h-24 rounded-xl flex items-center justify-center text-2xl font-bold" 
                                     data-target="${n}" ondrop="dropSort(event, ${n})" ondragover="allowDrop(event)"></div>`;
-                        }
-                    }).join('')}
+                }
+            }).join('')}
                 </div>
 
-                <div class="bg-orange-100 p-6 rounded-2xl border-2 border-orange-200">
+                <div class="bg-orange-100 p-4 rounded-2xl border-2 border-orange-200 flex-none">
                     <div class="flex justify-center gap-4">
-                        ${numbers.filter(n => !fixed.includes(n)).sort(()=>Math.random()-0.5).map(n => `
+                        ${numbers.filter(n => !fixed.includes(n)).sort(() => Math.random() - 0.5).map(n => `
                             <div draggable="true" ondragstart="dragStartSort(event, ${n})" 
-                                 class="draggable btn-3d w-16 h-20 md:w-24 md:h-24 bg-white border-orange-300 text-orange-600 rounded-xl flex items-center justify-center text-3xl md:text-4xl font-bold">
+                                 class="draggable btn-3d w-14 h-18 md:w-20 md:h-20 bg-white border-orange-300 text-orange-600 rounded-xl flex items-center justify-center text-2xl md:text-3xl font-bold">
                                 ${n}
                             </div>
                         `).join('')}
@@ -460,74 +557,75 @@
                 </div>
             </div>
         `;
-    }
-    
-    window.dragStartSort = function(e, val) { e.dataTransfer.setData('val', val); e.dataTransfer.setData('id', e.target.parentNode); }
-    
-    window.dropSort = function(e, targetVal) {
-        e.preventDefault();
-        const val = parseInt(e.dataTransfer.getData('val'));
-        
-        if(val === targetVal) {
-            e.target.classList.remove('drop-zone');
-            e.target.className = "w-16 h-20 md:w-24 md:h-32 bg-orange-500 text-white rounded-xl flex items-center justify-center text-3xl md:text-4xl font-bold border-4 border-orange-600 pop-in shadow-lg";
-            e.target.innerText = val;
-            e.target.removeAttribute('ondrop');
-            speak(val.toString());
-            
-            // Check if empty dropzones remain
-            if(document.querySelectorAll('.drop-zone').length === 0) {
-                setTimeout(()=>{ speak("Semua betul!"); triggerWin(); }, 500);
-            }
-        } else {
-            speak("Salah tempat.");
-            setInfo("Nombor tu bukan kat situ.");
         }
-    }
+
+        window.dragStartSort = function (e, val) { e.dataTransfer.setData('val', val); e.dataTransfer.setData('id', e.target.parentNode); }
+
+        window.dropSort = function (e, targetVal) {
+            e.preventDefault();
+            const val = parseInt(e.dataTransfer.getData('val'));
+
+            if (val === targetVal) {
+                e.target.classList.remove('drop-zone');
+                e.target.className = "w-14 h-18 md:w-20 md:h-24 bg-orange-500 text-white rounded-xl flex items-center justify-center text-2xl md:text-3xl font-bold border-4 border-orange-600 pop-in shadow-lg";
+                e.target.innerText = val;
+                e.target.removeAttribute('ondrop');
+                speak(val.toString());
+
+                // Check if empty dropzones remain
+                if (document.querySelectorAll('.drop-zone').length === 0) {
+                    setTimeout(() => { speak("Semua betul!"); triggerWin(); }, 500);
+                }
+            } else {
+                speak("Salah tempat.");
+                setInfo("Nombor tu bukan kat situ.");
+            }
+        }
 
 
-    /* --- 5. Kenal Digit --- */
-    let digitState = { num: "00", p: "0", s: "0", ask: "sa" };
+        /* --- 5. Kenal Digit --- */
+        let digitState = { num: "00", p: "0", s: "0", ask: "sa" };
 
-    function setupAct5(content) {
-        const q = [{n:"57",p:"5",s:"7"}, {n:"92",p:"9",s:"2"}, {n:"30",p:"3",s:"0"}];
-        const current = q[Math.floor(Math.random()*q.length)];
-        const askType = Math.random() > 0.5 ? "sa" : "puluh";
-        digitState = { ...current, ask: askType };
-        
-        const label = askType === "puluh" ? "PULUH" : "SA";
-        setInfo(`Klik digit ${label}.`);
+        function setupAct5(content) {
+            const q = [{ n: "57", p: "5", s: "7" }, { n: "92", p: "9", s: "2" }, { n: "30", p: "3", s: "0" }];
+            const current = q[Math.floor(Math.random() * q.length)];
+            const askType = Math.random() > 0.5 ? "sa" : "puluh";
+            digitState = { ...current, ask: askType };
 
-        content.innerHTML = `
-            <div class="w-full max-w-4xl text-center">
-                <h3 class="text-3xl font-bold text-pink-600 mb-8">👆 Kenal Nilai Tempat</h3>
-                <p class="text-2xl mb-6 text-slate-600 font-bold">Sila klik digit <span class="text-pink-600 underline">${label}</span></p>
+            const label = askType === "puluh" ? "PULUH" : "SA";
+            setInfo(`Klik digit ${label}.`);
+
+            content.innerHTML = `
+            <div class="w-full max-w-4xl text-center flex flex-col h-full justify-center">
+                <h3 class="text-2xl font-bold text-pink-600 mb-6">👆 Kenal Nilai Tempat</h3>
+                <p class="text-xl mb-6 text-slate-600 font-bold">Sila klik digit <span class="text-pink-600 underline">${label}</span></p>
                 
-                <div class="flex justify-center gap-4 text-9xl font-black cursor-pointer select-none">
-                    <div onclick="checkDigit('puluh', this)" class="digit-card p-8 rounded-2xl hover:bg-pink-50 border-4 border-transparent transition-all">${digitState.p}</div>
-                    <div onclick="checkDigit('sa', this)" class="digit-card p-8 rounded-2xl hover:bg-pink-50 border-4 border-transparent transition-all">${digitState.s}</div>
+                <div class="flex justify-center gap-4 text-8xl font-black cursor-pointer select-none">
+                    <div onclick="checkDigit('puluh', this)" class="digit-card p-6 rounded-2xl hover:bg-pink-50 border-4 border-transparent transition-all">${digitState.p}</div>
+                    <div onclick="checkDigit('sa', this)" class="digit-card p-6 rounded-2xl hover:bg-pink-50 border-4 border-transparent transition-all">${digitState.s}</div>
                 </div>
                 
-                <button onclick="setupAct5(document.getElementById('activity-content'))" class="mt-12 btn-3d bg-slate-400 text-white px-6 py-2 rounded-lg">Soalan Lain 🔄</button>
+                <button onclick="setupAct5(document.getElementById('activity-content'))" class="mt-8 btn-3d bg-slate-400 text-white px-6 py-2 rounded-lg">Soalan Lain 🔄</button>
             </div>
         `;
-        speak(`Klik digit ${label}.`);
-    }
-
-    window.checkDigit = function(type, el) {
-        if(type === digitState.ask) {
-            el.classList.add('text-pink-600', 'bg-pink-100', 'border-pink-300');
-            speak("Pandai!");
-            triggerWin();
-            setInfo("Jawapan Tepat!");
-        } else {
-            el.classList.add('shake', 'text-slate-400');
-            speak("Salah.");
-            setTimeout(()=>el.classList.remove('shake'), 500);
-            setInfo(`Bukan, itu digit ${type}.`);
+            speak(`Klik digit ${label}.`);
         }
-    }
 
-  </script>
+        window.checkDigit = function (type, el) {
+            if (type === digitState.ask) {
+                el.classList.add('text-pink-600', 'bg-pink-100', 'border-pink-300');
+                speak("Pandai!");
+                triggerWin();
+                setInfo("Jawapan Tepat!");
+            } else {
+                el.classList.add('shake', 'text-slate-400');
+                speak("Salah.");
+                setTimeout(() => el.classList.remove('shake'), 500);
+                setInfo(`Bukan, itu digit ${type}.`);
+            }
+        }
+
+    </script>
 </body>
+
 </html>
